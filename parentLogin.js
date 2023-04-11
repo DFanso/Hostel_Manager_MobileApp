@@ -9,6 +9,9 @@ import {
     ScrollView,
 } from 'react-native';
 import ParentWelcomePage from './parentWelcome';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const Parent = () => {
     const [showWelcomePage, setShowWelcomePage] = useState(false);
@@ -28,12 +31,38 @@ const ParentLoginPage = ({ onLoginSuccess }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const onSubmit = () => {
+    const onSubmit = async () => {
         if (email && email.includes('@') && password && password.length >= 6) {
-            onLoginSuccess();
-            console.log(`Email: ${email}, Password: ${password}`);
+          try {
+            const response = await axios.post(
+              'http://192.168.8.116:3000/api/parents/login', // replace with the actual URL of your login API
+              {
+                email,
+                password,
+              },
+              {
+                headers: {
+                  'Content-Type': 'application/json',
+                  Accept: 'application/json',
+                },
+              },
+            );
+      
+            if (response.data && response.data.token) {
+              await AsyncStorage.setItem('parent_jwt', response.data.token);
+              onLoginSuccess();
+            } else {
+              alert('Invalid credentials');
+            }
+          } catch (error) {
+            console.error(error);
+            alert('An error occurred during login');
+          }
+        } else {
+          alert('Please enter a valid email and password (minimum 6 characters)');
         }
-    };
+      };
+      
 
     return (
         <ScrollView style={styles.container}>

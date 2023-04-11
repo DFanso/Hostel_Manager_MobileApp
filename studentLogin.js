@@ -9,6 +9,10 @@ import {
     ScrollView,
 } from 'react-native';
 import StudentWelcomePage from './studentWelcome';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+
 
 
 
@@ -27,14 +31,28 @@ const StudentLoginPage = ({ onLoginSuccess }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const onSubmit = () => {
+    const onSubmit = async () => {
         if (email && email.includes('@') && password && password.length >= 6) {
-            console.log(`Email: ${email}, Password: ${password}`);
-            onLoginSuccess();
+          try {
+            const response = await axios.post('http://192.168.8.116:3000/api/students/login', {
+              email,
+              password,
+            });
+      
+            if (response.data && response.data.token) {
+              await AsyncStorage.setItem('jwt', response.data.token);
+              onLoginSuccess();
+            } else {
+              alert('Invalid credentials');
+            }
+          } catch (error) {
+            console.error(error);
+            alert('An error occurred during login');
+          }
         } else {
-            alert('Please enter a valid email and password (minimum 6 characters)');
+          alert('Please enter a valid email and password (minimum 6 characters)');
         }
-    };
+      };
 
 
 

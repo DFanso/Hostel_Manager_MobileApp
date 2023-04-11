@@ -7,24 +7,66 @@ import {
     StyleSheet,
     ScrollView,
 } from 'react-native';
+import axios from 'axios';
+import { useNavigation } from '@react-navigation/native';
+
 
 const StudentRegistrationPage = () => {
-    const [studentID, setStudentID] = useState('');
-    const [name, setName] = useState('');
+    const navigation = useNavigation();
+
+    const [studentId, setStudentId] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [address, setAddress] = useState('');
     const [roomNo, setRoomNo] = useState('');
     const [password, setPassword] = useState('');
     const [retypePassword, setRetypePassword] = useState('');
+    
+
+    
+
+    const registerStudent = async () => {
+        try {
+          await axios.post(
+            'http://192.168.8.116:3000/api/students/register', 
+            {
+              studentId,
+              firstName,
+              lastName,
+              email,
+              address,
+              roomNo,
+              password,
+            },
+            {
+              headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+              },
+            },
+          );
+    
+          alert('Registration successful');
+          navigation.navigate('StudentLoginPage'); 
+        } catch (error) {
+          console.error(error);
+          alert('An error occurred during registration');
+        }
+      };
 
     const validateForm = () => {
-        if (!studentID) {
+        if (!studentId) {
             alert('Please enter a student ID');
             return;
         }
 
-        if (!name) {
-            alert('Please enter a name');
+        if (!firstName) {
+            alert('Please enter first name');
+            return;
+        }
+        if (!lastName) {
+            alert('Please enter last name');
             return;
         }
 
@@ -52,6 +94,8 @@ const StudentRegistrationPage = () => {
             alert('Passwords do not match');
             return;
         }
+
+        registerStudent();
     };
 
     return (
@@ -59,16 +103,23 @@ const StudentRegistrationPage = () => {
             <Text style={styles.header}>Student Registration</Text>
             <TextInput
                 style={styles.input}
-                onChangeText={setStudentID}
-                value={studentID}
+                onChangeText={setStudentId}
+                value={studentId}
                 placeholder="Student ID"
                 placeholderTextColor="#fff"
             />
             <TextInput
                 style={styles.input}
-                onChangeText={setName}
-                value={name}
-                placeholder="Name"
+                onChangeText={setFirstName}
+                value={firstName}
+                placeholder="First Name"
+                placeholderTextColor="#fff"
+            />
+            <TextInput
+                style={styles.input}
+                onChangeText={setLastName}
+                value={lastName}
+                placeholder="Last Name"
                 placeholderTextColor="#fff"
             />
             <TextInput
