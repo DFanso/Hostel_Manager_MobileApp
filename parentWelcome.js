@@ -7,10 +7,10 @@ import {
     Image,
     Dimensions,
 } from 'react-native';
-import MonthlyBill from './studentPayment';
+import MonthlyBill from './parentPayment';
 import QRCodeScannerComponent from './qrScanner';
 
-const StudentWelcomePage = ({ navigate }) => {
+const ParentWelcomePage = ({ navigate }) => {
     return (
         <View style={styles.container}>
             <View style={styles.titleContainer}>
@@ -24,7 +24,7 @@ const StudentWelcomePage = ({ navigate }) => {
             />
             <TouchableOpacity
                 style={styles.button}
-                onPress={() => navigate('StudentPayment')}
+                onPress={() => navigate('ParentPayment')}
             >
                 <Text style={styles.buttonText}>MONTHLY BILL</Text>
             </TouchableOpacity>
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
 });
 
 const ParentComponent = () => {
-    const [currentPage, setCurrentPage] = useState('StudentWelcomePage');
+    const [currentPage, setCurrentPage] = useState('ParentWelcomePage');
 
     const handleNavigate = (page) => {
         setCurrentPage(page);
@@ -86,10 +86,10 @@ const ParentComponent = () => {
 
     return (
         <>
-            {currentPage === 'StudentWelcomePage' && (
-                <StudentWelcomePage navigate={handleNavigate} />
+            {currentPage === 'ParentWelcomePage' && (
+                <ParentWelcomePage navigate={handleNavigate} />
             )}
-            {currentPage === 'StudentPayment' && <MonthlyBill />}
+            {currentPage === 'ParentPayment' && <MonthlyBill />}
             {currentPage === 'AttendanceInterface' && <AttendanceInterface />}
             {currentPage === 'QRCodeScannerComponent' && <QRCodeScannerComponent />}
         </>

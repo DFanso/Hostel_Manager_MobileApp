@@ -12,7 +12,6 @@ import { Picker } from '@react-native-picker/picker';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-
 const MonthlyBill = () => {
     const months = [
         'January',
@@ -40,6 +39,7 @@ const MonthlyBill = () => {
     const [monthValid, setMonthValid] = useState(false);
     const [amount, setAmount] = useState('');
 
+    const [expiry, setExpiry] = useState('');
 
     // Validation functions
     const validateName = (text) => {
@@ -51,18 +51,24 @@ const MonthlyBill = () => {
     };
 
     const validateExpiry = (text) => {
+        // Add a slash after the first two digits if not already present
+        if (text.length === 2 && !text.includes('/')) {
+            text += '/';
+        }
+
+        setExpiry(text);
         setExpiryValid(/^(0[1-9]|1[0-2])\/(2\d)$/.test(text));
     };
 
     const validateCVC = (text) => {
-        setCvcValid(text.length === 3 && /^\d+$/.test(text) );
+        setCvcValid(text.length === 3 && /^\d+$/.test(text));
     };
 
     const validateAmount = (text) => {
         const num = parseFloat(text);
         setAmount(num);
         setAmountValid(num > 0);
-      };
+    };
 
     const validateMonth = (itemValue) => {
         setMonthValid(itemValue !== '');
@@ -75,31 +81,31 @@ const MonthlyBill = () => {
             Alert.alert('Error', 'Please fill in all fields correctly');
             return;
         }
-    
+
         // Get JWT token from AsyncStorage
-        const parent_jwt = await AsyncStorage.getItem('parent_jwt');
-    
-        if (!parent_jwt) {
+        const jwt = await AsyncStorage.getItem('jwt');
+
+        if (!jwt) {
             Alert.alert('Error', 'Unable to get authentication token. Please log in again.');
             return;
         }
-    
-        
-        const API_URL = 'http://192.168.8.116:3000/api/payments';
-    
+
+
+        const API_URL = 'http://192.168.1.7:3000/api/payments';
+
         const requestData = {
-            payerType: 'parent',
-            month:selectedMonth,
+            payerType: 'student',
+            month: selectedMonth,
             amount: amount,
         };
-    
+
         try {
             const response = await axios.post(API_URL, requestData, {
                 headers: {
-                    'Authorization': `Bearer ${parent_jwt}`,
+                    'Authorization': `Bearer ${jwt}`,
                 },
             });
-    
+
             if (response.status === 201 || response.status === 200) {
                 console.log('API Response:', response.data);
                 Alert.alert('Success', 'Payment submitted successfully!');
@@ -113,10 +119,9 @@ const MonthlyBill = () => {
             Alert.alert('Error', 'Payment submission failed. Please try again.');
         }
     };
-    
 
     return (
-        <ScrollView style={styles.container}>
+        <ScrollView contentContainerStyle={styles.container}>
             <View style={styles.cardContainer}>
                 <Text style={styles.label}>Name on card</Text>
                 <TextInput
@@ -136,6 +141,7 @@ const MonthlyBill = () => {
                     keyboardType="number-pad"
                     maxLength={5}
                     placeholder="MM/YY"
+                    value={expiry} // Use the expiry state variable as the value
                     onChangeText={(text) => validateExpiry(text)}
                 />
                 <Text style={styles.label}>CVC</Text>
@@ -164,7 +170,7 @@ const MonthlyBill = () => {
                     keyboardType="number-pad"
                     value={amount.toString()}
                     onChangeText={(text) => validateAmount(text)}
-                    />
+                />
                 <TouchableOpacity style={styles.payButton} onPress={submitPayment}>
                     <Text style={styles.payButtonText}>Pay Now</Text>
                 </TouchableOpacity>
@@ -175,15 +181,18 @@ const MonthlyBill = () => {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        flexGrow: 1,
         backgroundColor: '#612CE8',
         paddingHorizontal: 16,
+        justifyContent: 'center', // Add this line
+        alignItems: 'center', // Add this line
     },
     cardContainer: {
         backgroundColor: '#CB8AFF',
         borderRadius: 16,
         padding: 24,
-        marginTop: 30,
+        width: '100%', // Add this line
+        maxWidth: 600, // Add this line
     },
     label: {
         fontSize: 16,
