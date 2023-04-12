@@ -12,11 +12,6 @@ import StudentWelcomePage from './studentWelcome';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-
-
-
-
-
 const App = () => {
     const [showWelcomePage, setShowWelcomePage] = useState(false);
 
@@ -33,57 +28,64 @@ const StudentLoginPage = ({ onLoginSuccess }) => {
 
     const onSubmit = async () => {
         if (email && email.includes('@') && password && password.length >= 6) {
-          try {
-            const response = await axios.post('http://192.168.8.116:3000/api/students/login', {
-              email,
-              password,
-            });
-      
-            if (response.data && response.data.token) {
-              await AsyncStorage.setItem('jwt', response.data.token);
-              onLoginSuccess();
-            } else {
-              alert('Invalid credentials');
+            try {
+                const response = await axios.post(
+                    'http://192.168.1.7:3000/api/students/login',
+                    {
+                        email,
+                        password,
+                    },
+                );
+
+                if (response.data && response.data.token) {
+                    await AsyncStorage.setItem('jwt', response.data.token);
+                    onLoginSuccess();
+                } else {
+                    alert('Invalid credentials');
+                }
+            } catch (error) {
+                console.error(error);
+                alert('An error occurred during login');
             }
-          } catch (error) {
-            console.error(error);
-            alert('An error occurred during login');
-          }
         } else {
-          alert('Please enter a valid email and password (minimum 6 characters)');
+            alert('Please enter a valid email and password (minimum 6 characters)');
         }
-      };
-
-
+    };
 
     return (
-        <ScrollView style={styles.container}>
+        <ScrollView
+            contentContainerStyle={styles.container}
+        >
             <View style={styles.innerContainer}>
-                <Image
-                    style={styles.icon}
-                    source={{
-                        uri: 'https://drive.google.com/uc?id=1dDiraS08JrdCfERjNFMPueZPPgqInhHD',
-                    }}
-                />
-                <TextInput
-                    style={styles.input}
-                    placeholder="Enter your email address"
-                    placeholderTextColor="white"
-                    keyboardType="email-address"
-                    onChangeText={(text) => setEmail(text)}
-                    value={email}
-                />
-                <TextInput
-                    style={styles.input}
-                    placeholder="Enter your password"
-                    placeholderTextColor="white"
-                    secureTextEntry
-                    onChangeText={(text) => setPassword(text)}
-                    value={password}
-                />
-                <TouchableOpacity style={styles.button} onPress={onSubmit}>
-                    <Text style={styles.buttonText}>LOGIN</Text>
-                </TouchableOpacity>
+                <View style={styles.imageContainer}>
+                    <Image
+                        style={styles.icon}
+                        source={{
+                            uri: 'https://drive.google.com/uc?id=1dDiraS08JrdCfERjNFMPueZPPgqInhHD',
+                        }}
+                    />
+                </View>
+                <View style={styles.inputContainer}>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Enter your email address"
+                        placeholderTextColor="white"
+                        keyboardType="email-address"
+                        onChangeText={(text) => setEmail(text)}
+                        value={email}
+                    />
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Enter your password"
+                        placeholderTextColor="white"
+                        secureTextEntry
+                        onChangeText={(text) => setPassword(text)}
+                        value={password}
+                    />
+                    <TouchableOpacity style={styles.button} onPress={onSubmit}>
+                        <Text style={styles.buttonText}>LOGIN</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         </ScrollView>
     );
@@ -91,12 +93,21 @@ const StudentLoginPage = ({ onLoginSuccess }) => {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        flexGrow: 1,
         backgroundColor: '#612CE8',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     innerContainer: {
-        alignItems: 'center',
         padding: 20,
+        width: '100%',
+        maxWidth: 400,
+    },
+    imageContainer: {
+        alignItems: 'center',
+    },
+    inputContainer: {
+        alignItems: 'center',
     },
     icon: {
         width: 225,

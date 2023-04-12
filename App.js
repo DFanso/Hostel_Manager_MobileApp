@@ -49,7 +49,7 @@ function HomePage({ navigation }) {
 function HostelManagerApp() {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Home" component={HomePage} />
         <Stack.Screen name="RegistrationPage" component={RegistrationPage} />
         <Stack.Screen name="LoginPage" component={LoginPage} />
@@ -71,6 +71,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
+    marginTop: 150,
     fontSize: 40,
     fontWeight: 'bold',
     color: 'white',
@@ -80,7 +81,7 @@ const styles = StyleSheet.create({
     height: 250,
     width: 250,
     borderRadius: 125,
-    marginTop: 40,
+    marginTop: 30,
   },
   bottom: {
     flex: 2,
@@ -97,7 +98,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     paddingHorizontal: 30,
     paddingVertical: 15,
-    marginTop: 30,
+    marginTop: 18,
   },
   buttonText: {
     fontSize: 22,
