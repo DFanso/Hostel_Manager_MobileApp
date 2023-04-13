@@ -8,7 +8,7 @@ import {
     Dimensions,
 } from 'react-native';
 import MonthlyBill from './parentPayment';
-import QRCodeScannerComponent from './qrScanner';
+import ParentAttendance from './parentAttendance';
 
 const ParentWelcomePage = ({ navigate }) => {
     return (
@@ -36,7 +36,7 @@ const ParentWelcomePage = ({ navigate }) => {
             />
             <TouchableOpacity
                 style={styles.button}
-                onPress={() => navigate('QRCodeScannerComponent')}
+                onPress={() => navigate('ParentAttendance')}
             >
                 <Text style={styles.buttonText}>ATTENDANCE</Text>
             </TouchableOpacity>
@@ -90,8 +90,7 @@ const ParentComponent = () => {
                 <ParentWelcomePage navigate={handleNavigate} />
             )}
             {currentPage === 'ParentPayment' && <MonthlyBill />}
-            {currentPage === 'AttendanceInterface' && <AttendanceInterface />}
-            {currentPage === 'QRCodeScannerComponent' && <QRCodeScannerComponent />}
+            {currentPage === 'ParentAttendance' && <ParentAttendance />}
         </>
     );
 };
