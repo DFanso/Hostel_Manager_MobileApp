@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -7,10 +7,10 @@ import {
   TextInput,
   Image,
   ScrollView,
-} from 'react-native';
-import ParentWelcomePage from './parentWelcome';
-import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+} from "react-native";
+import ParentWelcomePage from "./parentWelcome";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Parent = () => {
   const [showWelcomePage, setShowWelcomePage] = useState(false);
@@ -27,38 +27,38 @@ const Parent = () => {
 };
 
 const ParentLoginPage = ({ onLoginSuccess }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const onSubmit = async () => {
-    if (email && email.includes('@') && password && password.length >= 6) {
+    if (email && email.includes("@") && password && password.length >= 6) {
       try {
         const response = await axios.post(
-          'http://192.168.1.7:3000/api/parents/login', // replace with the actual URL of your login API
+          "http://192.168.1.4:3000/api/parents/login", // replace with the actual URL of your login API
           {
             email,
             password,
           },
           {
             headers: {
-              'Content-Type': 'application/json',
-              Accept: 'application/json',
+              "Content-Type": "application/json",
+              Accept: "application/json",
             },
-          },
+          }
         );
 
         if (response.data && response.data.token) {
-          await AsyncStorage.setItem('parent_jwt', response.data.token);
+          await AsyncStorage.setItem("parent_jwt", response.data.token);
           onLoginSuccess();
         } else {
-          alert('Invalid credentials');
+          alert("Invalid credentials");
         }
       } catch (error) {
         console.error(error);
-        alert('An error occurred during login');
+        alert("An error occurred during login");
       }
     } else {
-      alert('Please enter a valid email and password (minimum 6 characters)');
+      alert("Please enter a valid email and password (minimum 6 characters)");
     }
   };
   return (
@@ -69,7 +69,7 @@ const ParentLoginPage = ({ onLoginSuccess }) => {
             <Image
               style={styles.icon}
               source={{
-                uri: 'https://drive.google.com/uc?id=1v9aRbYNwJVooZObYcwy9cAvRJvG4gm3A',
+                uri: "https://drive.google.com/uc?id=1v9aRbYNwJVooZObYcwy9cAvRJvG4gm3A",
               }}
             />
           </View>
@@ -103,23 +103,23 @@ const ParentLoginPage = ({ onLoginSuccess }) => {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    backgroundColor: '#612CE8',
+    backgroundColor: "#612CE8",
   },
   parentContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   innerContainer: {
     padding: 20,
-    width: '100%',
+    width: "100%",
     maxWidth: 400,
   },
   imageContainer: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   inputContainer: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   icon: {
     width: 225,
@@ -128,21 +128,21 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 40,
-    width: '100%',
+    width: "100%",
     borderBottomWidth: 1,
-    borderBottomColor: 'white',
+    borderBottomColor: "white",
     marginBottom: 20,
-    color: 'white',
+    color: "white",
   },
   button: {
-    backgroundColor: 'black',
+    backgroundColor: "black",
     borderRadius: 20,
     paddingHorizontal: 20,
     paddingVertical: 10,
   },
   buttonText: {
     fontSize: 20,
-    color: 'white',
+    color: "white",
   },
 });
 

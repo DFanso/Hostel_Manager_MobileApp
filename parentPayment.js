@@ -12,7 +12,6 @@ import { Picker } from "@react-native-picker/picker";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-
 const MonthlyBill = () => {
   const months = [
     "January",
@@ -101,7 +100,7 @@ const MonthlyBill = () => {
       return;
     }
 
-    const API_URL = "http://192.168.1.7:3000/api/payments";
+    const API_URL = "http://192.168.1.4:3000/api/payments";
 
     const requestData = {
       payerType: "parent",
