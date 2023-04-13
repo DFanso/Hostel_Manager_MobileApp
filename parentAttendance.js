@@ -1,65 +1,100 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState, useEffect } from "react";
+import { StyleSheet, Text, View, ScrollView } from "react-native";
+import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import jwtDecode from "jwt-decode";
 
 const StudentAttendanceRecord = () => {
-    const [status1, setStatus1] = useState('IN');
-    const time1 = '3.00';
-    const [status2, setStatus2] = useState('OUT');
-    const time2 = '5.00';
-    const studentId = '20305';
+  const [attendanceRecords, setAttendanceRecords] = useState([]);
+  const [studentId, setStudentId] = useState(null);
 
-    const containerStyle1 = {
-        backgroundColor: status1 === 'IN' ? 'green' : '#8B0000',
+  useEffect(() => {
+    const fetchAttendanceRecords = async () => {
+      try {
+        const jwt = await AsyncStorage.getItem("parent_jwt");
+        const decoded = jwtDecode(jwt);
+        console.log("Decoded:", decoded);
+
+        const response = await axios.get(
+          `http://192.168.1.4:3000/api/students/parent/${decoded.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${jwt}`,
+            },
+          }
+        );
+
+        if (response.data && response.data.attendanceRecords) {
+          setAttendanceRecords(response.data.attendanceRecords);
+          setStudentId(response.data.studentId);
+        }
+      } catch (error) {
+        console.error("Error fetching attendance records:", error);
+      }
     };
 
-    const containerStyle2 = {
-        backgroundColor: status2 === 'IN' ? 'green' : '#8B0000',
-    };
+    fetchAttendanceRecords();
+  }, []);
 
-    return (
-        <View style={styles.container}>
-            <Text style={styles.studentIdText}>Student ID: {studentId}</Text>
-
-            <View style={[styles.statusContainer, containerStyle1]}>
-                <Text style={styles.statusLabel}>Time: {time1}</Text>
-                <Text style={styles.statusLabel}>Status: {status1}</Text>
-            </View>
-
-            <View style={[styles.statusContainer, containerStyle2]}>
-                <Text style={styles.statusLabel}>Time: {time2}</Text>
-                <Text style={styles.statusLabel}>Status: {status2}</Text>
-            </View>
-
-        </View>
-    );
+  return (
+    <View style={styles.container}>
+      {studentId && (
+        <Text style={styles.studentIdText}>Student ID: {studentId}</Text>
+      )}
+      <ScrollView contentContainerStyle={styles.scrollView}>
+        {attendanceRecords.map((record, index) => (
+          <View
+            key={index}
+            style={[
+              styles.statusContainer,
+              {
+                backgroundColor:
+                  record.action === "check-IN" ? "green" : "#8B0000",
+              },
+            ]}
+          >
+            <Text style={styles.statusLabel}>
+              Time: {new Date(record.timestamp).toLocaleString()}
+            </Text>
+            <Text style={styles.statusLabel}>Status: {record.action}</Text>
+          </View>
+        ))}
+      </ScrollView>
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#1e90ff',
-    },
-    studentIdText: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        marginBottom: 20,
-        color: 'white',
-    },
-    statusContainer: {
-        backgroundColor: 'green',
-        padding: 10,
-        borderRadius: 5,
-        marginBottom: 10,
-        width: '60%',
-    },
-    statusLabel: {
-        alignSelf: 'center',
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: 'white',
-    },
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "flex-start",
+    backgroundColor: "#1e90ff",
+  },
+  studentIdText: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 20,
+    paddingTop: 45,
+    color: "white",
+  },
+  scrollView: {
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 10,
+  },
+  statusContainer: {
+    padding: 10,
+    borderRadius: 5,
+    marginBottom: 10,
+    width: "100%",
+  },
+  statusLabel: {
+    alignSelf: "center",
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "white",
+  },
 });
 
 export default StudentAttendanceRecord;
