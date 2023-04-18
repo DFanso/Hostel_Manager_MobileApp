@@ -16,7 +16,7 @@ const StudentAttendanceRecord = () => {
         console.log("Decoded:", decoded);
 
         const response = await axios.get(
-          `http://192.168.1.4:3000/api/students/parent/${decoded.id}`,
+          `http://20.2.80.190:5100/api/students/parent/${decoded.id}`,
           {
             headers: {
               Authorization: `Bearer ${jwt}`,

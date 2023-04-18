@@ -26,7 +26,7 @@ const StudentRegistrationPage = () => {
   const registerStudent = async () => {
     try {
       await axios.post(
-        "http://192.168.1.4:3000/api/students/register",
+        "http://20.2.80.190:5100/api/students/register",
         {
           studentId,
           firstName,

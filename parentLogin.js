@@ -34,7 +34,7 @@ const ParentLoginPage = ({ onLoginSuccess }) => {
     if (email && email.includes("@") && password && password.length >= 6) {
       try {
         const response = await axios.post(
-          "http://192.168.1.4:3000/api/parents/login", // replace with the actual URL of your login API
+          "http://20.2.80.190:5100/api/parents/login", // replace with the actual URL of your login API
           {
             email,
             password,
