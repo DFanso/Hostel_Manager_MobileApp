@@ -30,7 +30,7 @@ const StudentLoginPage = ({ onLoginSuccess }) => {
     if (email && email.includes("@") && password && password.length >= 6) {
       try {
         const response = await axios.post(
-          "http://192.168.1.4:3000/api/students/login",
+          "http://20.2.80.190:5100/api/students/login",
           {
             email,
             password,
