@@ -15,7 +15,7 @@ const AttendanceInterface = () => {
       const timeStamp = new Date().toISOString();
 
       const response = await axios.post(
-        "http://20.2.80.190:5100/api/guardian/scanQR",
+        "http://159.89.203.249:5001/api/guardian/scanQR",
         {
           buttonName,
           qrToken,

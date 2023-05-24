@@ -100,7 +100,7 @@ const MonthlyBill = () => {
       return;
     }
 
-    const API_URL = "http://20.2.80.190:5100/api/payments";
+    const API_URL = "http://159.89.203.249:5001/api/payments";
 
     const requestData = {
       payerType: "parent",

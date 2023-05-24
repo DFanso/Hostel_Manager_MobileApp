@@ -70,7 +70,7 @@ const ParentRegistrationPage = () => {
       return;
     }
 
-    const API_URL = "http://20.2.80.190:5100/api/parents/register";
+    const API_URL = "http://159.89.203.249:5001/api/parents/register";
 
     try {
       const response = await axios.post(API_URL, {
